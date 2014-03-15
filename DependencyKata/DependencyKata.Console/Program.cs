@@ -4,7 +4,7 @@
     {
         static void Main(string[] args)
         {
-            var doItAll = new DoItAll();
+            var doItAll = new DoItAll(new ConsoleAdapter());
 
             doItAll.Do();
         }
