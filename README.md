@@ -1,0 +1,2 @@
+KatasForLegacyCode - kCSharp
+==============
