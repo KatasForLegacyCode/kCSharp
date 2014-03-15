@@ -22,14 +22,45 @@ namespace DependencyKata
         }
     }
 
+    public interface ILogger
+    {
+        string LogMessage(string message);
+    }
+
+    public class DatabaseLogger : ILogger
+    {
+        public string LogMessage(string message)
+        {
+            try
+            {
+                Database.SaveToLog(message);
+            }
+            catch (Exception ex)
+            {
+                // If database write fails, write to file
+                using (var writer = new StreamWriter("log.txt", true))
+                {
+                    var errorMessage = string.Format("{0} - Database.SaveToLog Exception: \r\n{1}",
+                        message, ex.Message);
+                    writer.WriteLine(errorMessage);
+
+                    return errorMessage;
+                }
+            }
+            return message;
+        }
+    }
+
     public class DoItAll
     {
         private const string _passwordsDontMatch = "The passwords don't match.";
         private readonly UserDetails _userDetails = new UserDetails();
         private readonly IConsoleAdapter _consoleAdapter;
+        private ILogger _logger;
 
-        public DoItAll(IConsoleAdapter consoleAdapter)
+        public DoItAll(IConsoleAdapter consoleAdapter, ILogger logger)
         {
+            _logger = logger;
             _consoleAdapter = consoleAdapter;
         }
 
@@ -56,23 +87,8 @@ namespace DependencyKata
 
             _consoleAdapter.SetOutput(message);
 
-            try
-            {
-                Database.SaveToLog(message);
-            }
-            catch (Exception ex)
-            {
-                // If database write fails, write to file
-                using (var writer = new StreamWriter("log.txt", true))
-                {
-                    var errorMessage = string.Format("{0} - Database.SaveToLog Exception: \r\n{1}",
-                        message, ex.Message);
-                    writer.WriteLine(errorMessage);
+            message = _logger.LogMessage(message);
 
-                    _consoleAdapter.GetInput();
-                    return errorMessage;
-                }
-            }
             _consoleAdapter.GetInput();
             return message;
         }
