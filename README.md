@@ -1,8 +1,7 @@
 KatasForLegacyCode - kCSharp
 ==============
 Slides with a walkthrough for DependencyKata:
-http://www.slideshare.net/dubmun/legacy-dependencykiller-32427870
+http://www.slideshare.net/WilliamMunn2/legacy-dependency-kata-v20
 
-I plan to add another step or two with more examples. 
-
-This document will be updated further as well.
+You can also read about it and view the slides from here:
+http://dubmun.com/blog/2016/08/legacy-dependency-kata-v2-0/
